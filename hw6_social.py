@@ -4,6 +4,7 @@ Name:
 Roll Number:
 """
 
+from socket import send_fds
 import hw6_social_tests as test
 
 project = "Social" # don't edit this
@@ -35,6 +36,12 @@ Parameters: str
 Returns: str
 '''
 def parseName(fromString):
+    for line in fromString.split("\n"):
+        start = line.find(":") 
+        line = line[start+1:]
+        end = line.find(" (")
+        line = line[:end]
+        line = line.strip()
     return
 
 
@@ -45,6 +52,12 @@ Parameters: str
 Returns: str
 '''
 def parsePosition(fromString):
+    for line in fromString.split("\n"):
+        start = line.find("(") 
+        line = line[start+1:]
+        end = line.find(" from")
+        line = line[:end]
+        line = line.strip()
     return
 
 
@@ -55,6 +68,12 @@ Parameters: str
 Returns: str
 '''
 def parseState(fromString):
+    for line in fromString.split("\n"):
+        start = line.find("from ") + len("from")
+        line = line[start:]
+        end = line.find(")")
+        line = line[:end]
+        line = line.strip()
     return
 
 
@@ -65,7 +84,18 @@ Parameters: str
 Returns: list of strs
 '''
 def findHashtags(message):
-    return
+    new=message.split("#")
+    l1=[]
+    for i in new[1:]:
+        s=""
+        for j in i:
+            if j not in endChars:
+                s+=j
+            else:
+                break 
+        l1.append('#'+s)
+
+    return l1
 
 
 '''
@@ -75,7 +105,9 @@ Parameters: dataframe ; str
 Returns: str
 '''
 def getRegionFromState(stateDf, state):
-    return
+    r=stateDf.loc[stateDf['state']==state,'region']
+    return r.value[0]
+
 
 
 '''
@@ -85,6 +117,22 @@ Parameters: dataframe ; dataframe
 Returns: None
 '''
 def addColumns(data, stateDf):
+    names=[]
+    positions=[]
+    states=[]
+    regions=[]
+    hashtags=[]
+    for i,r in data.iterrows():
+        names.append(parseName(r["lable"]))
+        positions.append(parsePosition(r["lable"]))
+        states.append(parseState(r["lable"]))
+        regions.append(getRegionFromState(stateDf,parseState(r["lable"])))
+        hashtags.append(findHashtags(r["text"]))
+    data['name']=names
+    data['position']=positions
+    data['state']=states
+    data['region']=regions
+    data['hashtags']=hashtags
     return
 
 
@@ -98,7 +146,12 @@ Returns: str
 '''
 def findSentiment(classifier, message):
     score = classifier.polarity_scores(message)['compound']
-    return
+    if score< -0.1:
+        return "negative"
+    elif score>0.1:
+        return "positive"
+    else:
+        return "neutral"
 
 
 '''
@@ -109,6 +162,8 @@ Returns: None
 '''
 def addSentimentColumn(data):
     classifier = SentimentIntensityAnalyzer()
+    sen=[findSentiment(classifier,r["text"]) for i,r in data.iterrows()]
+    data['sentiment']=sen 
     return
 
 
@@ -119,7 +174,18 @@ Parameters: dataframe ; str ; str
 Returns: dict mapping strs to ints
 '''
 def getDataCountByState(data, colName, dataToCount):
-    return
+    dicts={}
+    if len(colName)!=0 and len(dataToCount)!=0:
+        for i,r in data.iterrows():
+            if r["state"] not in dicts:
+                dicts[r["state"]]=0
+            dicts[r["state"]]+=1
+    if len(colName)==0 or len(dataToCount)==0:
+        for i,r in data.iterrows():
+            if r["state"] not in dicts:
+                dicts[r["state"]]=0
+            dicts[r["state"]]+=1
+    return dicts 
 
 
 '''
@@ -129,6 +195,15 @@ Parameters: dataframe ; str
 Returns: dict mapping strs to (dicts mapping strs to ints)
 '''
 def getDataForRegion(data, colName):
+    dicts={}
+    for i,r in data.iterrows():
+        key=r["region"]
+        if key not in dicts:
+            dicts[key]={}
+        if r[colName] not in dicts[key]:
+            dicts[key][r[colName]]=1
+        else:
+            dicts[key][r[colName]]+=1
     return
 
 
