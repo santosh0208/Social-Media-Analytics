@@ -83,7 +83,18 @@ Parameters: str
 Returns: list of strs
 '''
 def findHashtags(message):
-    return
+    new=message.split("#")
+    l1=[]
+    for i in new[1:]:
+        s=""
+        for j in i:
+            if j not in endChars:
+                s+=j
+            else:
+                break 
+        l1.append('#'+s)
+
+    return l1
 
 
 '''
