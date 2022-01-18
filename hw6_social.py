@@ -106,7 +106,7 @@ Returns: str
 def getRegionFromState(stateDf, state):
     r=stateDf.loc[stateDf['state']==state,'region']
     return r.value[0]
-    
+
 
 
 '''
@@ -116,6 +116,22 @@ Parameters: dataframe ; dataframe
 Returns: None
 '''
 def addColumns(data, stateDf):
+    names=[]
+    positions=[]
+    states=[]
+    regions=[]
+    hashtags=[]
+    for i,r in data.iterrows():
+        names.append(parseName(r["lable"]))
+        positions.append(parsePosition(r["lable"]))
+        states.append(parseState(r["lable"]))
+        regions.append(getRegionFromState(stateDf,parseState(r["lable"])))
+        hashtags.append(findHashtags(r["text"]))
+    data['name']=names
+    data['position']=positions
+    data['state']=states
+    data['region']=regions
+    data['hashtags']=hashtags
     return
 
 
