@@ -195,6 +195,15 @@ Parameters: dataframe ; str
 Returns: dict mapping strs to (dicts mapping strs to ints)
 '''
 def getDataForRegion(data, colName):
+    dicts={}
+    for i,r in data.iterrows():
+        key=r["region"]
+        if key not in dicts:
+            dicts[key]={}
+        if r[colName] not in dicts[key]:
+            dicts[key][r[colName]]=1
+        else:
+            dicts[key][r[colName]]+=1
     return
 
 
