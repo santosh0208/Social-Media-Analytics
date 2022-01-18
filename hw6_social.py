@@ -4,6 +4,7 @@ Name:
 Roll Number:
 """
 
+from socket import send_fds
 import hw6_social_tests as test
 
 project = "Social" # don't edit this
@@ -145,7 +146,12 @@ Returns: str
 '''
 def findSentiment(classifier, message):
     score = classifier.polarity_scores(message)['compound']
-    return
+    if score< -0.1:
+        return "negative"
+    elif score>0.1:
+        return "positive"
+    else:
+        return "neutral"
 
 
 '''
@@ -156,6 +162,8 @@ Returns: None
 '''
 def addSentimentColumn(data):
     classifier = SentimentIntensityAnalyzer()
+    sen=[findSentiment(classifier,r["text"]) for i,r in data.iterrows()]
+    data['sentiment']=sen 
     return
 
 
