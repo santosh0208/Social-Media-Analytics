@@ -35,6 +35,12 @@ Parameters: str
 Returns: str
 '''
 def parseName(fromString):
+    for line in fromString.split("\n"):
+        start = line.find(":") 
+        line = line[start+1:]
+        end = line.find(" (")
+        line = line[:end]
+        line = line.strip()
     return
 
 
@@ -45,6 +51,12 @@ Parameters: str
 Returns: str
 '''
 def parsePosition(fromString):
+    for line in fromString.split("\n"):
+        start = line.find("(") 
+        line = line[start+1:]
+        end = line.find(" from")
+        line = line[:end]
+        line = line.strip()
     return
 
 
@@ -55,6 +67,12 @@ Parameters: str
 Returns: str
 '''
 def parseState(fromString):
+    for line in fromString.split("\n"):
+        start = line.find("from ") + len("from")
+        line = line[start:]
+        end = line.find(")")
+        line = line[:end]
+        line = line.strip()
     return
 
 
@@ -65,7 +83,18 @@ Parameters: str
 Returns: list of strs
 '''
 def findHashtags(message):
-    return
+    new=message.split("#")
+    l1=[]
+    for i in new[1:]:
+        s=""
+        for j in i:
+            if j not in endChars:
+                s+=j
+            else:
+                break 
+        l1.append('#'+s)
+
+    return l1
 
 
 '''
