@@ -243,7 +243,18 @@ Parameters: dataframe ; str
 Returns: float
 '''
 def getHashtagSentiment(data, hashtag):
-    return
+    c=0
+    count=0
+    for i,r in data.iterrows():
+        if hashtag in findHashtags(r["text"]):
+            if r["sentiment"] =="positive":
+                count+=1
+            elif r["sentiment"] =="negative":
+                count-=1
+            elif r["sentiment"] =="neutral":
+                count+=0
+            c+=1
+    return count/c
 
 
 ### PART 3 ###
@@ -255,7 +266,15 @@ Parameters: dict mapping strs to ints ; str
 Returns: None
 '''
 def graphStateCounts(stateCounts, title):
-    import matplotlib.pyplot as plt
+    state=[i for i in stateCounts.keys()]
+    num=[j for j in stateCounts.values()]
+    plt.bar(state, num, width=0.6)
+    plt.xticks(ticks=list(range(len(state))), labels=state, rotation="vertical")
+    plt.xlabel("States")
+    plt.ylabel("Values of states")
+    plt.title(title)
+    plt.show()
+
     return
 
 
@@ -266,6 +285,7 @@ Parameters: dict mapping strs to ints ; dict mapping strs to ints ; int ; str
 Returns: None
 '''
 def graphTopNStates(stateCounts, stateFeatureCounts, n, title):
+    
     return
 
 
