@@ -204,7 +204,7 @@ def getDataForRegion(data, colName):
             dicts[key][r[colName]]=1
         else:
             dicts[key][r[colName]]+=1
-    return
+    return 
 
 
 '''
@@ -221,7 +221,7 @@ def getHashtagRates(data):
                 dicts[j]=1
             else:
                 dicts[j]+=1
-    return
+    return dicts
 
 
 '''
@@ -231,7 +231,9 @@ Parameters: dict mapping strs to ints ; int
 Returns: dict mapping strs to ints
 '''
 def mostCommonHashtags(hashtags, count):
-    return
+    res=dict(sorted(hashtags.items(), key=lambda x: x[1], reverse=True))
+    out=dict([(i,j) for (i,j) in res.items()] [:count])
+    return out 
 
 
 '''
