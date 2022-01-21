@@ -3,11 +3,9 @@ Social Media Analytics Project
 Name:
 Roll Number:
 """
-
-from socket import send_fds
 import hw6_social_tests as test
 
-project = "Social" # don't edit this
+#" # don't edit this
 
 ### PART 1 ###
 
@@ -17,6 +15,7 @@ nltk.download('vader_lexicon', quiet=True)
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import matplotlib.pyplot as plt; plt.rcdefaults()
 import numpy as np
+project = "Social"
 endChars = [ " ", "\n", "#", ".", ",", "?", "!", ":", ";", ")" ]
 
 '''
@@ -26,7 +25,9 @@ Parameters: str
 Returns: dataframe
 '''
 def makeDataFrame(filename):
-    return
+    c=pd.read_csv(filename)
+
+    return c 
 
 
 '''
@@ -42,7 +43,7 @@ def parseName(fromString):
         end = line.find(" (")
         line = line[:end]
         line = line.strip()
-    return
+    return line
 
 
 '''
@@ -58,7 +59,7 @@ def parsePosition(fromString):
         end = line.find(" from")
         line = line[:end]
         line = line.strip()
-    return
+    return line 
 
 
 '''
@@ -74,7 +75,7 @@ def parseState(fromString):
         end = line.find(")")
         line = line[:end]
         line = line.strip()
-    return
+    return line 
 
 
 '''
@@ -106,7 +107,7 @@ Returns: str
 '''
 def getRegionFromState(stateDf, state):
     r=stateDf.loc[stateDf['state']==state,'region']
-    return r.value[0]
+    return r.values[0]
 
 
 
@@ -123,17 +124,17 @@ def addColumns(data, stateDf):
     regions=[]
     hashtags=[]
     for i,r in data.iterrows():
-        names.append(parseName(r["lable"]))
-        positions.append(parsePosition(r["lable"]))
-        states.append(parseState(r["lable"]))
-        regions.append(getRegionFromState(stateDf,parseState(r["lable"])))
+        names.append(parseName(r["label"]))
+        positions.append(parsePosition(r["label"]))
+        states.append(parseState(r["label"]))
+        regions.append(getRegionFromState(stateDf,parseState(r["label"])))
         hashtags.append(findHashtags(r["text"]))
     data['name']=names
     data['position']=positions
     data['state']=states
     data['region']=regions
     data['hashtags']=hashtags
-    return
+    return 
 
 
 ### PART 2 ###
@@ -164,7 +165,7 @@ def addSentimentColumn(data):
     classifier = SentimentIntensityAnalyzer()
     sen=[findSentiment(classifier,r["text"]) for i,r in data.iterrows()]
     data['sentiment']=sen 
-    return
+    return 
 
 
 '''
@@ -177,9 +178,10 @@ def getDataCountByState(data, colName, dataToCount):
     dicts={}
     if len(colName)!=0 and len(dataToCount)!=0:
         for i,r in data.iterrows():
-            if r["state"] not in dicts:
-                dicts[r["state"]]=0
-            dicts[r["state"]]+=1
+            if r[colName]==dataToCount:
+                if r["state"] not in dicts:
+                    dicts[r["state"]]=0
+                dicts[r["state"]]+=1
     if len(colName)==0 or len(dataToCount)==0:
         for i,r in data.iterrows():
             if r["state"] not in dicts:
@@ -204,7 +206,7 @@ def getDataForRegion(data, colName):
             dicts[key][r[colName]]=1
         else:
             dicts[key][r[colName]]+=1
-    return 
+    return dicts 
 
 
 '''
@@ -409,7 +411,10 @@ if __name__ == "__main__":
     test.week2Tests()
     print("\n" + "#"*15 + " WEEK 2 OUTPUT " + "#" * 15 + "\n")
     test.runWeek2()"""
+    ##test.runWeek2()
+    test.week2Tests() 
 
-    ## Uncomment these for Week 3 ##
+    ##Uncomment these for Week 3 ##
     """print("\n" + "#"*15 + " WEEK 3 OUTPUT " + "#" * 15 + "\n")
     test.runWeek3()"""
+    test.runWeek3()
