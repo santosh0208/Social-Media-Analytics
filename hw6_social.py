@@ -321,6 +321,7 @@ def sideBySideBarPlots(xLabels, labelList, valueLists, title):
     xPositions = []
     for dataset in range(len(labelList)):
         xValues = []
+        
         for i in range(len(xLabels)):
             xValues.append(i - 0.4 + w * (dataset + 0.5))
         xPositions.append(xValues)
